@@ -67,12 +67,16 @@ p {
 .title-image {
   width: 60%;
   transform: rotate(25deg);
+  position: absolute;
+  right: 30%;
 }
 
 /* Features  */
 
 #features {
+  background-color: white;
   padding: 7% 15%;
+  position: relative;
 }
 
 .feature-box {
@@ -116,4 +120,15 @@ p {
 .press-logo {
   width: 15%;
   margin: 20px 20px 50px;
+}
+
+/* Pricing Section  */
+
+#pricing {
+  padding: 100px;
+  text-align: center;
+}
+
+.pricing-column {
+  padding: 3% 2%;
 }
