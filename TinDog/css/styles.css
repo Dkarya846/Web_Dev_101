@@ -132,3 +132,44 @@ p {
 .pricing-column {
   padding: 3% 2%;
 }
+
+/* CTA Section */
+
+#cta {
+  padding: 7% 15%;
+  background-color: #ff4c68;
+  text-align: center;
+}
+
+.cta-heading {
+  color: white;
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+/* Footer Section  */
+
+#footer {
+  text-align: center;
+  padding: 7% 15%;
+}
+
+.social-icons {
+  padding: 3% 0;
+}
+
+.social-icons a {
+  padding: 0 10px;
+  color: black;
+}
+
+@media (max-width: 992px) {
+  .title-image {
+    position: static;
+    transform: rotate(0);
+  }
+
+  #title {
+    text-align: center;
+  }
+}
