@@ -1,29 +1,37 @@
+//Importing necessary libraries
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const date = require(__dirname + "/date.js");
 
+//Creating express app
 const app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb+srv://admin_dkarya:3Qn2fpIgfjo4BR1Q@cluster0.yndge.mongodb.net/todolistDB");
+//Connecting the app to the database
+mongoose.connect("mongodb+srv://" + process.env.MONGODB_USERNAME + ":" + process.env.MONGODB_PASSWORD + "@cluster0.yndge.mongodb.net/todolistDB");
 
+//Creating the schema for todo list items
 const itemsSchema = mongoose.Schema({
   name: { type: String, required: true }
 })
 
+//Creating the schema for lists
 const listSchema = mongoose.Schema({
   name: String,
   items: [itemsSchema]
 });
 
+//Creating model for List
 const List = mongoose.model("List", listSchema);
 
+//Creating model for Item
 const Item = mongoose.model("Item", itemsSchema);
 
+//Creating default items for each todo-list
 const item1 = new Item({
   name: "Welcome to your todolist!"
 });
@@ -38,8 +46,7 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
-const workItems = [];
-
+//Setting various routes
 app.get("/", (req, res) => {
   const day = date.getDate();
 
@@ -116,8 +123,6 @@ app.post("/", (req, res) => {
 
 });
 
-//3Qn2fpIgfjo4BR1Q
-
 app.post("/delete", (req, res) => {
   const checkedId = req.body.checkbox;
   const listName = req.body.list;
@@ -138,11 +143,12 @@ app.post("/delete", (req, res) => {
   }
 })
 
-// app.get("/work", (req, res) => {
-//   res.render("list", { listTitle: "Work List", items: workItems });
-// });
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
 
-
-app.listen("3000", () => {
-  console.log("Server started at http://localhost:3000");
+//Making app to listen to port
+app.listen(port, () => {
+  console.log("Server started successfully");
 });

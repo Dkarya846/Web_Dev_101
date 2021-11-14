@@ -1,3 +1,7 @@
+body{
+    position: relative;
+    min-height: 100vh;
+}
 .container-fluid {
     padding-top: 70px;
     padding-bottom: 70px;
@@ -32,4 +36,8 @@
 	margin-top: 25px;
 	font-size: 12px;
   color: #fff;
+}
+
+textarea{
+    white-space: pre-wrap;
 }

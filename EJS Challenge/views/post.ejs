@@ -1,6 +1,6 @@
 <%- include('partials/header.ejs') -%>
 
 <h1><%= post.title%></h1>
-<p><%= post.content %></p>
+<p><%- post.content.replace(/\n/g, '<br/>') %></p>
 
 <%- include('partials/footer.ejs') -%>
