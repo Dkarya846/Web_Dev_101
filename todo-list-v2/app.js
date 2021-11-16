@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-//Connecting the app to the database
+//Connecting the app to the datazbase
 mongoose.connect("mongodb+srv://" + process.env.MONGODB_USERNAME + ":" + process.env.MONGODB_PASSWORD + "@cluster0.yndge.mongodb.net/todolistDB");
 
 //Creating the schema for todo list items
