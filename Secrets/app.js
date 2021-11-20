@@ -4,7 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(express.static("public"));
@@ -36,7 +36,13 @@ app.post("/login", (req, res) => {
       if (!user) {
         console.log("User Not Found");
       } else {
-        if (user.password === md5(req.body.password)) res.render("secrets");
+        bcrypt.compare(
+          req.body.password,
+          user.password,
+          function (err, result) {
+            res.render("secrets");
+          }
+        );
       }
     }
   });
@@ -47,15 +53,25 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  const user = new User({
-    email: req.body.username,
-    password: md5(req.body.password),
-  });
-
-  user.save((err) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  console.log(process.env.SALTROUNDS);
+  bcrypt.hash(password, parseInt(process.env.SALTROUNDS), function (err, hash) {
+    // Store hash in your password DB.
     if (!err) {
-      console.log("User added successfully");
-      res.render("secrets");
+      const user = new User({
+        email: username,
+        password: hash,
+      });
+
+      user.save((err) => {
+        if (!err) {
+          console.log("User added successfully");
+          res.render("secrets");
+        } else {
+          console.log(err);
+        }
+      });
     } else {
       console.log(err);
     }
