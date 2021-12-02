@@ -33,6 +33,8 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   googleId: String,
+  facebookId: String,
+  secret: String,
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -84,7 +86,7 @@ passport.deserializeUser(function (id, done) {
 
 app.get("/", (req, res) => {
   if (req.isAuthenticated()) {
-    res.render("secrets");
+    res.redirect("/secrets");
   } else {
     res.render("home");
   }
@@ -116,11 +118,35 @@ app.get(
 );
 
 app.get("/secrets", (req, res) => {
+  User.find({ secret: { $ne: null } }, function (err, foundUsers) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("secrets", { users: foundUsers });
+    }
+  });
+});
+
+app.get("/submit", (req, res) => {
   if (req.isAuthenticated()) {
-    res.render("secrets");
+    res.render("submit");
   } else {
     res.redirect("/login");
   }
+});
+
+app.post("/submit", (req, res) => {
+  const secret = req.body.secret;
+  User.findById(req.user._id, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.secret = secret;
+      foundUser.save(function () {
+        res.redirect("/secrets");
+      });
+    }
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -129,7 +155,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   const user = new User({
-    username: req.body.username,
+    email: req.body.username,
     password: req.body.password,
   });
 
@@ -151,7 +177,7 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
   User.register(
-    { username: req.body.username },
+    { email: req.body.username },
     req.body.password,
     (err, user) => {
       if (err) {
